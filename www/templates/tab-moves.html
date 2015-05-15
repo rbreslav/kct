@@ -1,5 +1,49 @@
-<ion-view view-title="Chats">
-  <ion-content>
+<style>
+
+  .square {
+
+    padding: 0;
+    margin: 0;
+    position: relative;
+    width:85px; 
+    height: 85px; 
+    display: inline-block;
+    border: 1px solid black;
+  }
+
+  .black {
+
+    background-color: #000;
+  }
+
+  .white {
+
+    background-color: #fff;
+  }
+
+  .square img {
+
+    position: absolute;
+    width: 100%;
+    left: 0;
+  }
+
+  .drag-enter {
+
+    border: 4px solid black;
+  }
+</style>
+
+<ion-view view-title="Moves">
+  <ion-content has-bouncing="false">
+    <div ng-repeat="row in moves.rows" style="width: 400px; text-align: center; margin: auto;">
+      <div ng-repeat="col in moves.cols" style="display: inline">
+        <div id="square_{{ row }}_{{ col }}" class="square white" ng-drop="moves.canDrop('square_{{ row }}_{{ col }}')" ng-drop-success="moves.onDropComplete('square_{{ row }}_{{ col }}', $event)">
+          <img ng-drag="true" ng-show="moves.isVisible('square_{{ row}}_{{ col }}')" src="img/pieces/knight-white.png"/>
+        </div>
+      </div>
+    </div>
+    <!--
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
         <img ng-src="{{chat.face}}">
@@ -12,5 +56,7 @@
         </ion-option-button>
       </ion-item>
     </ion-list>
+    -->
+    {{ moves.currentSquare }}
   </ion-content>
 </ion-view>
