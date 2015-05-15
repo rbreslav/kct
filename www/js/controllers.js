@@ -25,7 +25,11 @@ angular.module('starter.controllers', [])
 
 	  currentSquare: "square_1_1",
 
+	  isDragging: false,
+
 	  onDropComplete: function(toSquare, event) {
+
+	  	this.isDragging = false;
 
 	  	if (this.canDrop(toSquare)) {
 
@@ -62,6 +66,16 @@ angular.module('starter.controllers', [])
 
 		return false;
 	  },
+
+	  isPlaceholderVisible: function(square) {
+
+		if (square === this.currentSquare && !this.isDragging) {
+
+		  return true;
+		}
+
+		return false;
+	  },  
 
 	  getCoords: function(square) {
 
