@@ -1,24 +1,20 @@
 <style>
 
+  .screen {
+
+    padding: 0;
+    margin: 10px 0 0 0;
+  }
+
   .square {
 
     padding: 0;
     margin: 0;
     position: relative;
-    width:85px; 
-    height: 85px; 
+    width:  51px; 
+    height: 51px; 
     display: inline-block;
     border: 1px solid black;
-  }
-
-  .black {
-
-    background-color: #000;
-  }
-
-  .white {
-
-    background-color: #fff;
   }
 
   .square img {
@@ -34,27 +30,61 @@
     backgroun-color: yellow;
   }
 
-  .drag-enter {
+  .square.drag-enter {
 
-    border: 4px solid black;
+    border: 4px solid lightgreen;
+  }
+
+  .square.drag-enter.expert {
+
+    border: 1px solid #000;
   }
 
   .dragging {
 
     opacity: 1 !important;
+
   } 
+
+  .pieces {
+
+      margin: 10px auto;
+      text-align: center;
+  }
+
+  .pieces img {
+
+    width: 40px;
+    padding: 8px;
+  }
+
 </style>
 
 <ion-view view-title="Moves">
   <ion-content has-bouncing="false">
-    <div ng-repeat="row in moves.rows" style="width: 400px; text-align: center; margin: auto;">
-      <div ng-repeat="col in moves.cols" style="display: inline">
-        <div id="square_{{ row }}_{{ col }}" class="square white" ng-drop="moves.canDrop('square_{{ row }}_{{ col }}')" ng-drop-success="moves.onDropComplete('square_{{ row }}_{{ col }}', $event)" ng-drag-start="moves.isDragging=true">
-          <img class="dragger" ng-drag="true" ng-show="moves.isVisible('square_{{ row}}_{{ col }}')" src="img/pieces/knight-white.png"/>
-          <img ng-show="moves.isPlaceholderVisible('square_{{ row }}_{{ col }}')" src="img/pieces/knight-white.png"/>
+
+    <div class="screen">
+      <div ng-repeat="row in moves.rows" style="text-align: center; margin: auto;">
+        <div ng-repeat="col in moves.cols" style="display: inline">
+          <div id="square_{{ row }}_{{ col }}" class="square" ng-class="{ expert : moves.currentLevel > 3 }" ng-style="moves.squareColor('square_{{ row }}_{{ col }}')" ng-drop="moves.canDrop('square_{{ row }}_{{ col }}')" ng-drop-success="moves.onDropComplete('square_{{ row }}_{{ col }}', $event)" ng-drag-move="moves.isDragging=true" ng-drag-stop="moves.isDragging=false">
+            <img ng-mousedown="moves.aboutToDrag=true" ng-mouseup="moves.aboutToDrag=false" on-touch="moves.aboutToDrag=true" on-release="moves.aboutToDrag=false" class="dragger" ng-drag="true" ng-show="moves.isVisible('square_{{ row }}_{{ col }}')" src="img/pieces/{{ moves.currentPiece }}-white.png"/>
+            <img ng-show="moves.isPlaceholderVisible('square_{{ row }}_{{ col }}')" src="img/pieces/{{ moves.currentPiece }}-white.png"/>
+            <img ng-show="moves.canDrop('square_{{ row }}_{{ col }}') && (moves.currentLevel == 1 || (moves.currentLevel == 2 && (moves.isDragging || moves.aboutToDrag)))" src="img/pieces/green-star.png" />
+          </div>
         </div>
       </div>
+
+      <div class="pieces">
+        <img ng-click="moves.setCurrentPiece('king')" src="img/pieces/king-{{ moves.currentPiece === 'king' ? 'black' : 'white' }}.png" />
+        <img ng-click="moves.setCurrentPiece('queen')" src="img/pieces/queen-{{ moves.currentPiece === 'queen' ? 'black' : 'white' }}.png" />
+        <img ng-click="moves.setCurrentPiece('rook')" src="img/pieces/rook-{{ moves.currentPiece === 'rook' ? 'black' : 'white' }}.png" />
+        <img ng-click="moves.setCurrentPiece('bishop')" src="img/pieces/bishop-{{ moves.currentPiece === 'bishop' ? 'black' : 'white' }}.png" />
+        <img ng-click="moves.setCurrentPiece('knight')" src="img/pieces/knight-{{ moves.currentPiece === 'knight' ? 'black' : 'white' }}.png" />
+        <img ng-click="moves.setCurrentPiece('pawn')" src="img/pieces/pawn-{{ moves.currentPiece === 'pawn' ? 'black' : 'white' }}.png" />        
+      </div>
     </div>
+
+
     <!--
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
@@ -69,6 +99,5 @@
       </ion-item>
     </ion-list>
     -->
-    {{ moves.isDragging }}
   </ion-content>
 </ion-view>
