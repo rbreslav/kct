@@ -11,8 +11,6 @@
     padding: 0;
     margin: 0;
     position: relative;
-    width:  51px; 
-    height: 51px; 
     display: inline-block;
     border: 1px solid black;
   }
@@ -43,7 +41,6 @@
   .dragging {
 
     opacity: 1 !important;
-
   } 
 
   .pieces {
@@ -66,7 +63,7 @@
     <div class="screen">
       <div ng-repeat="row in moves.rows" style="text-align: center; margin: auto;">
         <div ng-repeat="col in moves.cols" style="display: inline">
-          <div id="square_{{ row }}_{{ col }}" class="square" ng-class="{ expert : moves.currentLevel > 3 }" ng-style="moves.squareColor('square_{{ row }}_{{ col }}')" ng-drop="moves.canDrop('square_{{ row }}_{{ col }}')" ng-drop-success="moves.onDropComplete('square_{{ row }}_{{ col }}', $event)" ng-drag-move="moves.isDragging=true" ng-drag-stop="moves.isDragging=false">
+          <div id="square_{{ row }}_{{ col }}" class="square" ng-class="{ expert : moves.currentLevel > 3 }" ng-style="moves.squareStyle('square_{{ row }}_{{ col }}')" ng-drop="moves.canDrop('square_{{ row }}_{{ col }}')" ng-drop-success="moves.onDropComplete('square_{{ row }}_{{ col }}', $event)" ng-drag-move="moves.isDragging=true" ng-drag-stop="moves.isDragging=false">
             <img ng-mousedown="moves.aboutToDrag=true" ng-mouseup="moves.aboutToDrag=false" on-touch="moves.aboutToDrag=true" on-release="moves.aboutToDrag=false" class="dragger" ng-drag="true" ng-show="moves.isVisible('square_{{ row }}_{{ col }}')" src="img/pieces/{{ moves.currentPiece }}-white.png"/>
             <img ng-show="moves.isPlaceholderVisible('square_{{ row }}_{{ col }}')" src="img/pieces/{{ moves.currentPiece }}-white.png"/>
             <img ng-show="moves.canDrop('square_{{ row }}_{{ col }}') && (moves.currentLevel == 1 || (moves.currentLevel == 2 && (moves.isDragging || moves.aboutToDrag)))" src="img/pieces/green-star.png" />

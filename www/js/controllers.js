@@ -13,150 +13,195 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('MovesCtrl', function($scope) {
+.controller('MovesCtrl', function($scope, $timeout) {
 
 	angular.extend($scope, { 
 
-	moves: {
+		moves: {
 
-		allMoves: {
+			allMoves: {
 
-			knight: [[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]],
+				knight: [[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]],
 
-			king:   [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]],
+				king:   [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]],
 
-			queen:  [[1,1],[2,2],[-1,-1],[-2,-2],[1,-1],[-1,1],[2,-2],[-2,2],
-					 [0,1],[0,-1],[1,0],[-1,0],[0,2],[0,-2],[2,0],[-2,0]],
+				queen:  [[1,1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],
+				         [-1,-1],[-2,-2],[-3,-3],[-4,-4],[-5,-5],[-6,-6],[-7,-7],
+				         [1,-1],[2,-2],[3,-3],[4,-4],[5,-5],[6,-6],[7,-7],
+				         [-1,1],[-2,2],[-3,3],[-4,4],[-5,5],[-6,6],[-7,7],
+				         [0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],
+						 [0,-1],[0,-2],[0,-3],[0,-4],[0,-5],[0,-6],[0,-7],
+						 [1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],
+						 [-1,0],[-2,0],[-3,0],[-4,0],[-5,0],[-6,0],[-7,0]],
 
-			bishop: [[1,1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],
-			         [-1,-1],[-2,-2],[-3,-3],[-4,-4],[-5,-5],[-6,-6],[-7,-7],
-			         [1,-1],[2,-2],[3,-3],[4,-4],[5,-5],[6,-6],[7,-7],
-			         [-1,1],[-2,2],[-3,3],[-4,4],[-5,5],[-6,6],[-7,7]],
+				bishop: [[1,1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],
+				         [-1,-1],[-2,-2],[-3,-3],[-4,-4],[-5,-5],[-6,-6],[-7,-7],
+				         [1,-1],[2,-2],[3,-3],[4,-4],[5,-5],[6,-6],[7,-7],
+				         [-1,1],[-2,2],[-3,3],[-4,4],[-5,5],[-6,6],[-7,7]],
 
-			rook:   [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],
-					 [0,-1],[0,-2],[0,-3],[0,-4],[0,-5],[0,-6],[0,-7],
-					 [1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],
-					 [-1,0],[-2,0],[-3,0],[-4,0],[-5,0],[-6,0],[-7,0]],
+				rook:   [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],
+						 [0,-1],[0,-2],[0,-3],[0,-4],[0,-5],[0,-6],[0,-7],
+						 [1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],
+						 [-1,0],[-2,0],[-3,0],[-4,0],[-5,0],[-6,0],[-7,0]],
 
-			pawn:   [[-1,0]]
-		},
+				pawn:   [[-1,0]]
+			},
 
-		rows: [1,2,3,4,5],
+			rows: [1,2,3,4],
 
-		cols: [1,2,3,4,5],
+			cols: [1,2,3,4],
 
-		currentLevel: 2,
+			currentLevel: 1,
 
-		currentPiece: 'bishop',
+			currentPiece: 'bishop',
 
-		currentSquare: "square_5_5",
+			currentSquare: "square_1_1",
 
-		isDragging: false,
+			isDragging: false,
 
-		aboutToDrag: false,
+			aboutToDrag: false,
 
-		startDrag: function() {
+			startDrag: function() {
 
-			console.log('tapped');
-			this.aboutToDrag = true;
-		},
+				console.log('tapped');
+				this.aboutToDrag = true;
+			},
 
-		setCurrentPiece: function(piece) {
+			setCurrentPiece: function(piece) {
 
-			this.currentPiece = piece;
-			this.currentSquare = "square_5_5";
-		},
+				this.currentPiece = piece;
+				this.currentSquare = "square_1_1";
+				this.findDrops();
+			},
 
-		squareColor: function(square) {
+			squareStyle: function(square) {
 
-			var coords = this.getCoords(square);
+				var coords = this.getCoords(square);
 
-			if (coords.y % 2 === 0) {
+				var width = 255 / this.cols.length;
+				var height = 255 / this.rows.length
 
-				if (coords.x % 2 === 0) {
+				if (coords.y % 2 === 0) {
 
-					return { 'background-color' : '#ccc' };
+					if (coords.x % 2 === 0) {
+
+						return { 'background-color' : '#ccc', width: width + 'px', height: height + 'px' };
+					}
+					else {
+
+						return { 'background-color' : '#fff', width: width + 'px', height: height + 'px' };
+					}
 				}
 				else {
 
-					return { 'background-color' : '#fff' };
+						if (coords.x % 2 === 0) {
+
+							return { 'background-color' : '#fff', width: width + 'px', height: height + 'px' };
+						}
+						else {
+
+							return { 'background-color' : '#ccc', width: width + 'px', height: height + 'px' };
+						}			
 				}
-		}
-		else {
+			},
 
-				if (coords.x % 2 === 0) {
+			onDropComplete: function(toSquare, event) {
 
-					return { 'background-color' : '#fff' };
+				this.isDragging = false;
+
+				if (this.canDrop(toSquare)) {
+
+					this.currentSquare = toSquare;	  		
+
+					var def = this.currentLevel > 1 ? 100 : 0;
+
+					$timeout(function() {
+						$scope.moves.findDrops();
+					}, def * $scope.moves.rows.length);
 				}
-				else {
+			},
 
-					return { 'background-color' : '#ccc' };
-				}			
-		}
-		},
+			canDropCache: {},
 
-		onDropComplete: function(toSquare, event) {
+			canDrop: function(square) {
 
-			this.isDragging = false;
-
-			if (this.canDrop(toSquare)) {
-
-			this.currentSquare = toSquare;	  		
-			}
-		},
-
-		canDrop: function(square) {
-
-			var from = this.getCoords(this.currentSquare);
-
-			var moves = this.allMoves[this.currentPiece];
-
-			for (i in moves) {
-
-				var x = from.x + moves[i][0];
-				var y = from.y + moves[i][1];
-
-				if (x > 0 && x < this.rows.length*this.cols.length && y > 0 && y < this.rows.length*this.cols.length && square === 'square_' + x + '_' + y) {
+				if (this.canDropCache[square]) {
 
 					return true;
 				}
-			}
 
-			return false;
-		},
+				return false;
+			},
 
-		isVisible: function(square) {
+			findDrops: function() {
 
-			if (square === this.currentSquare) {
+				this.canDropCache = {};
 
-				return true;
-			}
+				for (var r in this.rows) {
 
-			return false;
-		},
+					var row = this.rows[r];
 
-		isPlaceholderVisible: function(square) {
+					for (var c in this.cols) {
 
-			if (square === this.currentSquare && !this.isDragging) {
+						var col = this.cols[c];
 
-				return true;
-			}
+						var square = 'square_' + row + '_' + col;
 
-			return false;
+						console.log(square);
+
+						var from = this.getCoords(this.currentSquare);
+
+						var moves = this.allMoves[this.currentPiece];
+
+						for (i in moves) {
+
+							var x = from.x + moves[i][0];
+							var y = from.y + moves[i][1];
+
+							if (square === 'square_' + x + '_' + y && x >= 1 && x <= this.rows.length && y >= 1 && y <= this.cols.length) {
+
+								this.canDropCache[square] = true;
+								continue;
+							}
+						}
+					}
+				}
+			},
+
+			isVisible: function(square) {
+
+				if (square === this.currentSquare) {
+
+					return true;
+				}
+
+				return false;
+			},
+
+			isPlaceholderVisible: function(square) {
+
+				if (square === this.currentSquare && !this.isDragging) {
+
+					return true;
+				}
+
+				return false;
 			},  
 
-		getCoords: function(square) {
+			getCoords: function(square) {
 
-			var parts = square.split('_');
+				var parts = square.split('_');
 
-			return {
-				x: parseInt(parts[1]),
-				y: parseInt(parts[2])
+				return {
+					x: parseInt(parts[1]),
+					y: parseInt(parts[2])
+				}
 			}
 		}
-	}
 
 	});
+
+	$scope.moves.findDrops();
 
 })
 
