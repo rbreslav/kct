@@ -1,5 +1,23 @@
 angular.module('starter.controllers', [])
 
+
+
+.controller('SettingsCtrl', function($scope, $rootScope) {
+
+	$scope.settings = {
+		boardSize: "3x3",
+		level: 1,
+	};
+
+	$scope.$watch('settings', function(settings) {
+
+		$rootScope.settings = $scope.settings;
+
+	});	
+
+	$rootScope.settings = $scope.settings;
+})
+
 .controller('PiecesCtrl', function($scope, $state) {
 
 	angular.extend($scope, {
@@ -13,7 +31,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('MovesCtrl', function($scope, $timeout) {
+.controller('MovesCtrl', function($scope, $timeout, $rootScope) {
 
 	angular.extend($scope, { 
 
@@ -47,9 +65,9 @@ angular.module('starter.controllers', [])
 				pawn:   [[-1,0]]
 			},
 
-			rows: [1,2,3,4],
+			rows: [1,2,3],
 
-			cols: [1,2,3,4],
+			cols: [1,2,3],
 
 			currentLevel: 1,
 
@@ -203,16 +221,28 @@ angular.module('starter.controllers', [])
 
 	$scope.moves.findDrops();
 
-})
+	$rootScope.$watch('settings', function(settings) {
 
-/*
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-	$scope.chat = Chats.get($stateParams.chatId);
-})
-*/
+		if (settings != undefined) {
 
-.controller('AccountCtrl', function($scope) {
-	$scope.settings = {
-	enableFriends: true
-	};
+			var sizes = $rootScope.settings.boardSize.split('x');
+
+			$scope.moves.rows = [];
+			$scope.moves.cols = [];
+
+			for (var i = 1; i <= sizes[0]; i++) {
+			
+				$scope.moves.rows.push(i);
+			}
+
+			for (var i = 1; i <= sizes[1]; i++) {
+			
+				$scope.moves.cols.push(i);
+			}
+
+			$scope.moves.setCurrentPiece($scope.moves.currentPiece);
+
+			$scope.moves.currentLevel = $rootScope.settings.level;
+		}
+	}, true);
 });

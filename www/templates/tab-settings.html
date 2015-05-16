@@ -1,0 +1,42 @@
+<ion-view view-title="Settings">
+  <ion-content>
+    <ion-list>
+
+    	<div class="list">
+    		<label class="item item-input item-select">
+    			<div class="input-label">
+    				Board Size
+    			</div>
+    			<select ng-model="settings.boardSize">
+    				<option>3x3</option>
+    				<option>4x4</option>
+    				<option>5x5</option>
+    				<option>6x6</option>
+    				<option>7x7</option>
+    				<option>8x8</option>
+    			</select>
+    		</label>
+    	</div>
+
+    	<div class="list">
+    		<label class="item item-input item-select">
+    			<div class="input-label">
+    				Hint Level
+    			</div>
+    			<select ng-model="settings.level">
+    				<option>1</option>
+    				<option>2</option>
+    				<option>3</option>
+    				<option>4</option>
+    			</select>
+    		</label>
+    	</div>    	
+
+    	<!--
+	    <ion-toggle  ng-model="settings.enableFriends">
+	        Enable Friends
+	    </ion-toggle>
+		-->
+    </ion-list>
+  </ion-content>
+</ion-view>
