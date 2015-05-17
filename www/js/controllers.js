@@ -92,6 +92,30 @@ angular.module('starter.controllers', [])
 				this.findDrops();
 			},
 
+			boardStyle: function() {
+
+				switch(this.rows.length) {
+					case 3: 
+					 return { width: '257px', height: '257px' };
+					 break;
+					case 4: 
+					 return { width: '257px', height: '255px' };
+					 break;
+					case 5: 
+					 return { width: '257px', height: '257px' };
+					 break;
+					case 6: 
+					 return { width: '257px', height: '255px' };
+					 break;
+					case 7: 
+					 return { width: '256px', height: '254px' };
+					 break;
+					case 8: 
+					 return { width: '257px', height: '251px' };
+					 break;
+				}
+			},
+
 			squareStyle: function(square) {
 
 				var coords = this.getCoords(square);

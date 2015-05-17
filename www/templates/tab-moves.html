@@ -6,13 +6,21 @@
     margin: 10px 0 0 0;
   }
 
+  .board {
+
+    border: 1px solid #999;
+    padding: 5px 0 0 0;
+    margin: auto;
+  }
+
   .square {
 
     padding: 0;
-    margin: 0;
+    margin: -5px 0 0 0;
     position: relative;
     display: inline-block;
-    border: 1px solid black;
+    width: 
+    //border: 1px solid black;
   }
 
   .square img {
@@ -25,7 +33,6 @@
   .square img.dragger {
     opacity: 0;
     z-index: 1000;
-    backgroun-color: yellow;
   }
 
   .square.drag-enter {
@@ -61,14 +68,12 @@
   <ion-content has-bouncing="false">
 
     <div class="screen">
-      <div ng-repeat="row in moves.rows" style="text-align: center; margin: auto;">
-        <div ng-repeat="col in moves.cols" style="display: inline">
-          <div id="square_{{ row }}_{{ col }}" class="square" ng-class="{ expert : moves.currentLevel > 3 }" ng-style="moves.squareStyle('square_{{ row }}_{{ col }}')" ng-drop="moves.canDrop('square_{{ row }}_{{ col }}')" ng-drop-success="moves.onDropComplete('square_{{ row }}_{{ col }}', $event)" ng-drag-move="moves.isDragging=true" ng-drag-stop="moves.isDragging=false">
-            <img ng-mousedown="moves.aboutToDrag=true" ng-mouseup="moves.aboutToDrag=false" on-touch="moves.aboutToDrag=true" on-release="moves.aboutToDrag=false" class="dragger" ng-drag="true" ng-show="moves.isVisible('square_{{ row }}_{{ col }}')" src="img/pieces/{{ moves.currentPiece }}-white.png"/>
-            <img ng-show="moves.isPlaceholderVisible('square_{{ row }}_{{ col }}')" src="img/pieces/{{ moves.currentPiece }}-white.png"/>
-            <img ng-show="moves.canDrop('square_{{ row }}_{{ col }}') && (moves.currentLevel == 1 || (moves.currentLevel == 2 && (moves.isDragging || moves.aboutToDrag)))" src="img/pieces/green-star.png" />
-          </div>
-        </div>
+      <div class="board" ng-style="moves.boardStyle()">
+        <div ng-repeat="row in moves.rows" style="text-align: center; margin: auto;"><div ng-repeat="col in moves.cols" style="display: inline"><div id="square_{{ row }}_{{ col }}" class="square" ng-class="{ expert : moves.currentLevel > 3 }" ng-style="moves.squareStyle('square_{{ row }}_{{ col }}')" ng-drop="moves.canDrop('square_{{ row }}_{{ col }}')" ng-drop-success="moves.onDropComplete('square_{{ row }}_{{ col }}', $event)" ng-drag-move="moves.isDragging=true" ng-drag-stop="moves.isDragging=false">
+              <img ng-mousedown="moves.aboutToDrag=true" ng-mouseup="moves.aboutToDrag=false" on-touch="moves.aboutToDrag=true" on-release="moves.aboutToDrag=false" class="dragger" ng-drag="true" ng-show="moves.isVisible('square_{{ row }}_{{ col }}')" src="img/pieces/{{ moves.currentPiece }}-white.png"/>
+              <img ng-show="moves.isPlaceholderVisible('square_{{ row }}_{{ col }}')" src="img/pieces/{{ moves.currentPiece }}-white.png"/>
+              <img ng-show="moves.canDrop('square_{{ row }}_{{ col }}') && (moves.currentLevel == 1 || (moves.currentLevel == 2 && (moves.isDragging || moves.aboutToDrag)))" src="img/pieces/green-star.png" />
+            </div></div></div>
       </div>
 
       <div class="pieces">
