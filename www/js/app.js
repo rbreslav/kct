@@ -48,25 +48,65 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   })
 
-  .state('tab.pieces-knight', {
-    url: '/pieces/knight',
+  .state('tab.pieces-king', {
+    url: '/pieces/:piece',
     views: {
       'tab-pieces': {
-        templateUrl: 'templates/tab-pieces-knight.html',
+        templateUrl: 'templates/tab-pieces-piece.html',
+        controller: 'PiecesCtrl'
+      }
+    }
+  })  
+
+  .state('tab.pieces-queen', {
+    url: '/pieces/:piece',
+    views: {
+      'tab-pieces': {
+        templateUrl: 'templates/tab-pieces-piece.html',
+        controller: 'PiecesCtrl'
+      }
+    }
+  })  
+
+  .state('tab.pieces-rook', {
+    url: '/pieces/:piece',
+    views: {
+      'tab-pieces': {
+        templateUrl: 'templates/tab-pieces-piece.html',
+        controller: 'PiecesCtrl'
+      }
+    }
+  })  
+
+  .state('tab.pieces-bishop', {
+    url: '/pieces/:piece',
+    views: {
+      'tab-pieces': {
+        templateUrl: 'templates/tab-pieces-piece.html',
         controller: 'PiecesCtrl'
       }
     }
   })
 
- .state('tab.pieces-rook', {
-    url: '/pieces/rook',
+ .state('tab.pieces-knight', {
+    url: '/pieces/:piece',
     views: {
       'tab-pieces': {
-        templateUrl: 'templates/tab-pieces-rook.html',
+        templateUrl: 'templates/tab-pieces-piece.html',
         controller: 'PiecesCtrl'
       }
     }
-  })  
+  }) 
+
+ .state('tab.pieces-pawn', {
+    url: '/pieces/:piece',
+    views: {
+      'tab-pieces': {
+        templateUrl: 'templates/tab-pieces-piece.html',
+        controller: 'PiecesCtrl'
+      }
+    }
+  })    
 
   .state('tab.moves', {
       url: '/moves',

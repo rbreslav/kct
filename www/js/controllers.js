@@ -18,16 +18,64 @@ angular.module('starter.controllers', [])
 	$rootScope.settings = $scope.settings;
 })
 
-.controller('PiecesCtrl', function($scope, $state) {
+.controller('PiecesCtrl', function($scope, $state, $stateParams) {
 
 	angular.extend($scope, {
 
-		go: function(piece) {
+		pieces: {
 
-			$state.go('tab.pieces-' + piece);
+			byRank: ['king','queen','rook','bishop','knight','pawn'],
+
+			currentPiece: $stateParams.piece,
+
+			nextPiece: '',
+
+			go: function(piece) {
+
+				piece = piece || this.nextPiece;
+
+				$state.go('tab.pieces-' + piece, { piece : piece });				
+			},
+
+			audioOn: false,
+
+			audioIsPlaying() {
+
+				return this.audioOn;
+			},
+
+			toggleAudio: function(piece) {
+
+				if (this.audioOn) {
+
+					document.getElementById(piece + '-audio').pause();
+					this.audioOn = false;
+				}
+				else {
+
+					document.getElementById(piece + '-audio').play();
+					this.audioOn = true;
+				}
+			}
+
 		}
 
 	});
+
+	for (var r = 0; r < $scope.pieces.byRank.length; r++) {
+
+		if ($scope.pieces.currentPiece === $scope.pieces.byRank[r] && r === 5) {
+
+			$scope.pieces.nextPiece = $scope.pieces.byRank[0];
+			break;
+		}
+
+		else if ($scope.pieces.currentPiece === $scope.pieces.byRank[r]) {
+
+			$scope.pieces.nextPiece = $scope.pieces.byRank[r+1];
+			break;
+		}
+	}
 
 })
 
