@@ -9,11 +9,10 @@
 
 </style>
 
-
-<div class="piece" on-swipe-left="pieces.go(pieces.nextPiece)">
-  <img style="width: 280px" ng-src="img/pieces/{{ pieces.currentPiece }}-white.png">
+<div class="piece" id="{{ pieces.currentPiece }}" on-swipe-left="pieces.go(pieces.nextPiece)" on-swipe-right="pieces.back()">
+  <img style="width: 280px" ng-src="img/pieces/{{ pieces.currentPiece }}-white.png" />
   <div style="width: 48px; overflow:hide">
-  	<audio id="{{ pieces.currentPiece }}-audio" src="img/aud/test.mp3" type="audio/mpeg" onended="audioDone()"/></audio>
+  	<audio id="{{ pieces.currentPiece }}-audio" src="{{ 'img/aud/' + pieces.currentPiece + '.mp3' }}" type="audio/mpeg" onended="audioDone(this.id)"/></audio>
   </div>
   <button ng-click="pieces.toggleAudio(pieces.currentPiece)"><i class="icon" ng-class="{ 'ion-pause' : pieces.audioIsPlaying(), 'ion-play' : !pieces.audioIsPlaying() }"></i></button>
 </div>

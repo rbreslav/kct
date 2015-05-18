@@ -18,8 +18,21 @@
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
+    <script type="text/javascript">
+      function audioDone(piece) {
+          parts = piece.split('-');
+          piece = parts[0];
+          var scope = angular.element(document.getElementById(piece)).scope();
+
+          if (scope) {
+            scope.$apply(function(){
+                scope.pieces.audioDone();
+            })
+          }
+      }
+    </script>    
   </head>
-  <body ng-app="starter" ng-cloak="">
+  <body ng-app="starter" ng-cloak="" class="app-body">
     <!--
       The nav bar that will be updated as we navigate between views.
     -->

@@ -4,25 +4,20 @@ angular.module('starter.controllers', [])
 
 .controller('SettingsCtrl', function($scope, $rootScope) {
 
-	$scope.settings = {
-		boardSize: "3x3",
-		level: 1,
-	};
+	$scope.settings = $rootScope.settings;
 
 	$scope.$watch('settings', function(settings) {
 
 		$rootScope.settings = $scope.settings;
 
 	});	
-
-	$rootScope.settings = $scope.settings;
 })
 
-.controller('PiecesCtrl', function($scope, $state, $stateParams) {
+.controller('PiecesCtrl', function($scope, $state, $stateParams, $rootScope, $timeout, $ionicHistory) {
 
 	angular.extend($scope, {
 
-		pieces: {
+		pieces: {			
 
 			byRank: ['king','queen','rook','bishop','knight','pawn'],
 
@@ -30,18 +25,44 @@ angular.module('starter.controllers', [])
 
 			nextPiece: '',
 
-			go: function(piece) {
+			go: function() {
 
-				piece = piece || this.nextPiece;
+				var piece = this.nextPiece;
+
+				$rootScope.lastPiece = $rootScope.lastPiece || [];
+
+				$rootScope.lastPiece.push(this.currentPiece);
+
+				this.audioDone();
 
 				$state.go('tab.pieces-' + piece, { piece : piece });				
+
+			},
+
+			back: function() {
+
+				var piece = $rootScope.lastPiece.pop();
+
+				if (piece) {
+
+					$state.go('tab.pieces-' + piece, { piece : piece });
+				}
+				else {
+
+					$state.go('tab.pieces');
+				}
 			},
 
 			audioOn: false,
 
-			audioIsPlaying() {
+			audioIsPlaying: function() {
 
 				return this.audioOn;
+			},
+
+			audioDone: function() {
+
+				this.audioOn = false;
 			},
 
 			toggleAudio: function(piece) {
@@ -57,26 +78,74 @@ angular.module('starter.controllers', [])
 					this.audioOn = true;
 				}
 			}
-
 		}
-
 	});
 
-	for (var r = 0; r < $scope.pieces.byRank.length; r++) {
+	if ($rootScope.settings.cycleType === 'random') {
 
-		if ($scope.pieces.currentPiece === $scope.pieces.byRank[r] && r === 5) {
+		if ($rootScope.forRandom.length === 0) {
 
-			$scope.pieces.nextPiece = $scope.pieces.byRank[0];
-			break;
+			angular.copy($rootScope.doneRandom, $rootScope.forRandom);
+
+			$rootScope.doneRandom = [];
+
+			var piece = $rootScope.forRandom.splice(0, 1)[0];
+			$scope.pieces.nextPiece = piece;
+			$rootScope.doneRandom.push(piece);
 		}
+		else {
 
-		else if ($scope.pieces.currentPiece === $scope.pieces.byRank[r]) {
+			var rand = Math.floor(Math.random() * $rootScope.forRandom.length)
 
-			$scope.pieces.nextPiece = $scope.pieces.byRank[r+1];
-			break;
+			var piece = $rootScope.forRandom.splice(rand, 1)[0];
+
+			$scope.pieces.nextPiece = piece;
+			$rootScope.doneRandom.push(piece);
 		}
 	}
 
+	else if ($rootScope.settings.cycleType === 'k2p') {
+
+		for (var r = $scope.pieces.byRank.length - 1; r >= 0; r--) {
+
+			if ($scope.pieces.currentPiece === $scope.pieces.byRank[r] && r === 0) {
+
+				$scope.pieces.nextPiece = $scope.pieces.byRank[0];
+				break;
+			}
+
+			else if ($scope.pieces.currentPiece === $scope.pieces.byRank[r]) {
+
+				$scope.pieces.nextPiece = $scope.pieces.byRank[r-1];
+				break;
+			}
+		}
+	}
+
+	else {
+
+		for (var r = 0; r < $scope.pieces.byRank.length; r++) {
+
+			if ($scope.pieces.currentPiece === $scope.pieces.byRank[r] && r === 5) {
+
+				$scope.pieces.nextPiece = $scope.pieces.byRank[0];
+				break;
+			}
+
+			else if ($scope.pieces.currentPiece === $scope.pieces.byRank[r]) {
+
+				$scope.pieces.nextPiece = $scope.pieces.byRank[r+1];
+				break;
+			}
+		}
+	}
+
+	if ($scope.pieces.currentPiece) {
+
+		$timeout(function() {
+			$scope.pieces.toggleAudio($scope.pieces.currentPiece);
+		}, 1000);
+	}
 })
 
 .controller('MovesCtrl', function($scope, $timeout, $rootScope) {

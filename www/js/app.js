@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngDraggable'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $state) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,6 +19,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       StatusBar.styleLightContent();
     }
   });
+
+
+  $rootScope.settings = {
+      boardSize: "3x3",
+      level: 1,
+      cycleType: 'random'
+    };
+
+  $rootScope.forRandom = ['king','queen','rook','bishop','knight','pawn'];
+  $rootScope.doneRandom = [];
+
+  $rootScope.nav = function(tab) {
+
+    $state.go('tab.' + tab);
+  }
+
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
