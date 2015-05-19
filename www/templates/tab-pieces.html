@@ -1,9 +1,7 @@
 <ion-view view-title="{{ pieces.currentPiece }}">
   <ion-content class="padding" has-bouncing="false">
-  	<div style="display: table-cell; margin: auto; text-align: center; width: 100%; margin-top:200px">
-	    <div style="background-color: yellow; width: 600px; height: 300px" on-swipe-left="pieces.go()">
-	      Start
-	    </div>
-	</div>
+    <div style="background-color: #eee; text-align:center; width:255px; height: 300px; margin: auto" on-swipe-left="pieces.go(true)">
+      <div style="display: table-cell; margin: auto; width: 255px; height: 300px; vertical-align: middle; text-align:center; background-color: #eee; font-size: 18px">Swipe Left to Start Training!<br/><br/><i class="icon ion-arrow-left-c" style="font-size: 60px"></i></div>
+    </div>
   </ion-content>
 </ion-view>

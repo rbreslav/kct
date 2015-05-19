@@ -32,11 +32,27 @@
     		</label>
     	</div>    	
 
-    	<!--
-	    <ion-toggle  ng-model="settings.enableFriends">
-	        Enable Friends
+        <div class="list">
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Piece Training Order
+                </div>
+                <select ng-model="settings.cycleType">
+                    <option value="k2p">King to Pawn</option>
+                    <option value="p2k">Pawn to King</option>
+                    <option value="random">Random</option>
+                </select>
+            </label>
+        </div>           
+
+        <ion-toggle ng-model="settings.soundOn">
+            Sound
+        </ion-toggle>
+    	
+	    <ion-toggle ng-model="settings.autoPlay">
+	        Auto-play Piece Name
 	    </ion-toggle>
-		-->
+		
     </ion-list>
   </ion-content>
 </ion-view>

@@ -67,6 +67,9 @@
 <ion-view view-title="Moves">
   <ion-content has-bouncing="false">
 
+    <audio id="blip-audio" src="img/aud/blip.mp3" type="audio/mpeg" /></audio>
+    <audio id="error-audio" src="img/aud/error.mp3" type="audio/mpeg" /></audio>
+
     <div class="screen">
       <div class="board" ng-style="moves.boardStyle()">
         <div ng-repeat="row in moves.rows" style="text-align: center; margin: auto;"><div ng-repeat="col in moves.cols" style="display: inline"><div id="square_{{ row }}_{{ col }}" class="square" ng-class="{ expert : moves.currentLevel > 3 }" ng-style="moves.squareStyle('square_{{ row }}_{{ col }}')" ng-drop="moves.canDrop('square_{{ row }}_{{ col }}')" ng-drop-success="moves.onDropComplete('square_{{ row }}_{{ col }}', $event)" ng-drag-move="moves.isDragging=true" ng-drag-stop="moves.isDragging=false">

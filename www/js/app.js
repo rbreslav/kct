@@ -24,7 +24,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   $rootScope.settings = {
       boardSize: "3x3",
       level: 1,
-      cycleType: 'random'
+      cycleType: 'k2p',
+      autoPlay: false,
+      soundOn: true
     };
 
   $rootScope.forRandom = ['king','queen','rook','bishop','knight','pawn'];

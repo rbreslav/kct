@@ -13,7 +13,7 @@ angular.module('starter.controllers', [])
 	});	
 })
 
-.controller('PiecesCtrl', function($scope, $state, $stateParams, $rootScope, $timeout, $ionicHistory) {
+.controller('PiecesCtrl', function($scope, $state, $stateParams, $rootScope, $timeout) {
 
 	angular.extend($scope, {
 
@@ -81,71 +81,89 @@ angular.module('starter.controllers', [])
 		}
 	});
 
-	if ($rootScope.settings.cycleType === 'random') {
+	var setupCycle = function() {
 
-		if ($rootScope.forRandom.length === 0) {
+		if ($rootScope.settings.cycleType === 'random') {
 
-			angular.copy($rootScope.doneRandom, $rootScope.forRandom);
+			if ($rootScope.forRandom.length === 0) {
 
-			$rootScope.doneRandom = [];
+				angular.copy($rootScope.doneRandom, $rootScope.forRandom);
 
-			var piece = $rootScope.forRandom.splice(0, 1)[0];
-			$scope.pieces.nextPiece = piece;
-			$rootScope.doneRandom.push(piece);
+				$rootScope.doneRandom = [];
+
+				var piece = $rootScope.forRandom.splice(0, 1)[0];
+				$scope.pieces.nextPiece = piece;
+				$rootScope.doneRandom.push(piece);
+			}
+			else {
+
+				var rand = Math.floor(Math.random() * $rootScope.forRandom.length)
+
+				var piece = $rootScope.forRandom.splice(rand, 1)[0];
+
+				$scope.pieces.nextPiece = piece;
+				$rootScope.doneRandom.push(piece);
+			}
 		}
+
+		else if ($rootScope.settings.cycleType === 'p2k') {
+
+			for (var r = $scope.pieces.byRank.length - 1; r >= 0; r--) {
+
+				if (!$scope.pieces.currentPiece || $scope.pieces.currentPiece === $scope.pieces.byRank[r] && r === 0) {
+
+					$scope.pieces.nextPiece = $scope.pieces.byRank[5];
+					break;
+				}
+
+				else if ($scope.pieces.currentPiece === $scope.pieces.byRank[r]) {
+
+					$scope.pieces.nextPiece = $scope.pieces.byRank[r-1];
+					break;
+				}
+			}
+		}
+
 		else {
 
-			var rand = Math.floor(Math.random() * $rootScope.forRandom.length)
+			for (var r = 0; r < $scope.pieces.byRank.length; r++) {
 
-			var piece = $rootScope.forRandom.splice(rand, 1)[0];
+				if (!$scope.pieces.currentPiece || $scope.pieces.currentPiece === $scope.pieces.byRank[r] && r === 5) {
 
-			$scope.pieces.nextPiece = piece;
-			$rootScope.doneRandom.push(piece);
-		}
-	}
+					$scope.pieces.nextPiece = $scope.pieces.byRank[0];
+					break;
+				}
 
-	else if ($rootScope.settings.cycleType === 'k2p') {
+				else if ($scope.pieces.currentPiece === $scope.pieces.byRank[r]) {
 
-		for (var r = $scope.pieces.byRank.length - 1; r >= 0; r--) {
-
-			if ($scope.pieces.currentPiece === $scope.pieces.byRank[r] && r === 0) {
-
-				$scope.pieces.nextPiece = $scope.pieces.byRank[0];
-				break;
-			}
-
-			else if ($scope.pieces.currentPiece === $scope.pieces.byRank[r]) {
-
-				$scope.pieces.nextPiece = $scope.pieces.byRank[r-1];
-				break;
+					$scope.pieces.nextPiece = $scope.pieces.byRank[r+1];
+					break;
+				}
 			}
 		}
+
 	}
 
-	else {
+	setupCycle();
 
-		for (var r = 0; r < $scope.pieces.byRank.length; r++) {
-
-			if ($scope.pieces.currentPiece === $scope.pieces.byRank[r] && r === 5) {
-
-				$scope.pieces.nextPiece = $scope.pieces.byRank[0];
-				break;
-			}
-
-			else if ($scope.pieces.currentPiece === $scope.pieces.byRank[r]) {
-
-				$scope.pieces.nextPiece = $scope.pieces.byRank[r+1];
-				break;
-			}
-		}
-	}
-
-	if ($scope.pieces.currentPiece) {
+	if ($scope.pieces.currentPiece && $rootScope.settings.autoPlay && $rootScope.settings.soundOn) {
 
 		$timeout(function() {
 			$scope.pieces.toggleAudio($scope.pieces.currentPiece);
 		}, 1000);
 	}
+
+	$rootScope.$watch('settings', function(newValue, oldValue) {
+
+		if (newValue.cycleType !== oldValue.cycleType) {
+
+			$rootScope.lastPiece = [];
+			$scope.pieces.nextPiece = "";
+			$scope.pieces.currentPiece = "";
+			setupCycle();
+
+		}
+	}, true);	
 })
 
 .controller('MovesCtrl', function($scope, $timeout, $rootScope) {
@@ -270,6 +288,10 @@ angular.module('starter.controllers', [])
 
 				if (this.canDrop(toSquare)) {
 
+					if ($rootScope.settings.soundOn) {
+						document.getElementById('blip-audio').play();
+					}
+
 					this.currentSquare = toSquare;	  		
 
 					var def = this.currentLevel > 1 ? 100 : 0;
@@ -277,6 +299,13 @@ angular.module('starter.controllers', [])
 					$timeout(function() {
 						$scope.moves.findDrops();
 					}, def * $scope.moves.rows.length);
+				}
+
+				else {
+
+					if ($rootScope.settings.soundOn) {
+						document.getElementById('error-audio').play();
+					}
 				}
 			},
 
